@@ -1,0 +1,11 @@
+{
+  "alignment_pipeline.ref_fasta": "/tmp/jovyan/work/git/edugen_pub/ref/ref.fasta",
+  "alignment_pipeline.ref_dict": "/tmp/jovyan/work/git/edugen_pub/ref/ref.dict",
+  "alignment_pipeline.ref_fasta_fai": "/tmp/jovyan/work/git/edugen_pub/ref/ref.fasta.fai",
+  "alignment_pipeline.ref_fasta_amb": "/tmp/jovyan/work/git/edugen_pub/ref/ref.fasta.amb",
+  "alignment_pipeline.ref_fasta_ann": "/tmp/jovyan/work/git/edugen_pub/ref/ref.fasta.ann",
+  "alignment_pipeline.ref_fasta_bwt": "/tmp/jovyan/work/git/edugen_pub/ref/ref.fasta.bwt",
+  "alignment_pipeline.ref_fasta_pac": "/tmp/jovyan/work/git/edugen_pub/ref/ref.fasta.pac",
+  "alignment_pipeline.ref_fasta_sa": "/tmp/jovyan/work/git/edugen_pub/ref/ref.fasta.sa",
+  "alignment_pipeline.mother_fastq": "/tmp/jovyan/work/git/edugen_pub/fastq/mother.fq"
+}

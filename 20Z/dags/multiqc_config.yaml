@@ -1,0 +1,16 @@
+# General configuration
+title: "MultiQC Report"
+intro_text: "Raport wygenerowany przez MultiQC."
+
+# Sample name cleaning
+sample_names:
+  patterns:
+    - ".fq"
+    - ".bam"
+    - ".vcf"
+    - "_fastqc.zip"
+    - "_bcftools_stats.txt"
+    - "_flagstat.txt"
+
+# Custom directory for saving output files
+output_dir: "multiqc_report"
