@@ -1,0 +1,12 @@
+{
+  "sharded_variant_calling.ref_fasta": "/tmp/jovyan/work/git/edugen_pub/ref/ref.fasta",
+  "sharded_variant_calling.ref_dict": "/tmp/jovyan/work/git/edugen_pub/ref/ref.dict",
+  "sharded_variant_calling.ref_fasta_fai": "/tmp/jovyan/work/git/edugen_pub/ref/ref.fasta.fai",
+  "sharded_variant_calling.ref_fasta_amb": "/tmp/jovyan/work/git/edugen_pub/ref/ref.fasta.amb",
+  "sharded_variant_calling.ref_fasta_ann": "/tmp/jovyan/work/git/edugen_pub/ref/ref.fasta.ann",
+  "sharded_variant_calling.ref_fasta_bwt": "/tmp/jovyan/work/git/edugen_pub/ref/ref.fasta.bwt",
+  "sharded_variant_calling.ref_fasta_pac": "/tmp/jovyan/work/git/edugen_pub/ref/ref.fasta.pac",
+  "sharded_variant_calling.ref_fasta_sa": "/tmp/jovyan/work/git/edugen_pub/ref/ref.fasta.sa",
+  "sharded_variant_calling.mother_fastq": "/tmp/jovyan/work/git/edugen_pub/fastq/mother.fq",
+  "sharded_variant_calling.scatter_count": 4
+}

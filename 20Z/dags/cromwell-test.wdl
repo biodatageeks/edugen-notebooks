@@ -1,7 +1,7 @@
 # Example workflow
 version 1.0
 workflow test {
-    call TestTask
+    call myTask
 }
 
 task myTask {
