@@ -91,8 +91,8 @@ def plot_measurements(records):
         ax.set_ylim(0,max(r[field] for r in rows)*1.2)
         ax.set_ylabel('Czas [s]' if field=='seconds' else 'Maks. zaobserwowane RSS [GiB]')
         ax.spines[['top','right']].set_visible(False)
-    title = 'filtr SNV · mediana z 2 pomiarów'
-    fig.suptitle('polars-bio · '+title+'\npunkty = poszczególne pomiary')
+    title = 'filtr SNV, mediana z 2 pomiarów'
+    fig.suptitle('polars-bio: '+title+'\npunkty = poszczególne pomiary')
     fig.tight_layout(); plt.show()
 
 def annotation_chart(frame):

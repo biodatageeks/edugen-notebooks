@@ -1,4 +1,4 @@
-# Big Data w genomice · OMICS Data Science 2026
+# Big Data w genomice, OMICS Data Science 2026
 
 Warsztaty: **niedziela, 25 października 2026, 8 godzin z przerwami**. Prowadzący: Tomasz Gambin i Mateusz Dawidziuk.
 

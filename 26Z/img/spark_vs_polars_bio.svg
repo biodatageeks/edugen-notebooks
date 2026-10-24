@@ -1,0 +1,131 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 600" width="1120" height="600" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#555"/>
+    </marker>
+    <marker id="arrT" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#0A7E8C"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="1120" height="600" fill="#ffffff"/>
+
+  <!-- ===================== Spark ===================== -->
+  <rect x="10" y="10" width="540" height="580" rx="10" fill="#FFF8F3" stroke="#E25A1C" stroke-width="1.5"/>
+  <text x="280" y="40" text-anchor="middle" font-size="18" font-weight="bold" fill="#B5440F">Apache Spark, local[n]</text>
+  <text x="280" y="60" text-anchor="middle" font-size="13" fill="#555">jeden proces (JVM), wiele wątków</text>
+
+  <text x="140" y="92" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">Etap 1</text>
+  <text x="460" y="92" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">Etap 2</text>
+
+  <!-- partycje -> zadania (etap 1) -->
+  <g font-size="13" fill="#222">
+    <rect x="30" y="105" width="90" height="34" rx="5" fill="#FDEBDD" stroke="#E25A1C"/><text x="75" y="127" text-anchor="middle">partycja 1</text>
+    <rect x="30" y="160" width="90" height="34" rx="5" fill="#FDEBDD" stroke="#E25A1C"/><text x="75" y="182" text-anchor="middle">partycja 2</text>
+    <rect x="30" y="215" width="90" height="34" rx="5" fill="#FDEBDD" stroke="#E25A1C"/><text x="75" y="237" text-anchor="middle">partycja 3</text>
+    <rect x="30" y="270" width="90" height="34" rx="5" fill="#FDEBDD" stroke="#E25A1C"/><text x="75" y="292" text-anchor="middle">partycja 4</text>
+
+    <rect x="140" y="105" width="120" height="34" rx="5" fill="#ffffff" stroke="#E25A1C"/><text x="200" y="127" text-anchor="middle">zadanie, wątek 1</text>
+    <rect x="140" y="160" width="120" height="34" rx="5" fill="#ffffff" stroke="#E25A1C"/><text x="200" y="182" text-anchor="middle">zadanie, wątek 2</text>
+    <rect x="140" y="215" width="120" height="34" rx="5" fill="#ffffff" stroke="#E25A1C"/><text x="200" y="237" text-anchor="middle">zadanie, wątek 3</text>
+    <rect x="140" y="270" width="120" height="34" rx="5" fill="#ffffff" stroke="#E25A1C"/><text x="200" y="292" text-anchor="middle">zadanie, wątek 4</text>
+  </g>
+  <g stroke="#555" stroke-width="1.4" marker-end="url(#arr)">
+    <line x1="120" y1="122" x2="138" y2="122"/><line x1="120" y1="177" x2="138" y2="177"/>
+    <line x1="120" y1="232" x2="138" y2="232"/><line x1="120" y1="287" x2="138" y2="287"/>
+  </g>
+
+  <!-- shuffle -->
+  <rect x="285" y="105" width="105" height="199" rx="6" fill="#F6D3C0" stroke="#E25A1C"/>
+  <g font-size="13" text-anchor="middle" fill="#222">
+    <text x="337" y="160" font-weight="bold">shuffle</text>
+    <text x="337" y="185">zapis i odczyt</text>
+    <text x="337" y="203">danych</text>
+    <text x="337" y="221">pośrednich</text>
+    <text x="337" y="246" fill="#7A2E0B">serializacja,</text>
+    <text x="337" y="264" fill="#7A2E0B">dysk</text>
+  </g>
+  <g stroke="#555" stroke-width="1.4" marker-end="url(#arr)">
+    <line x1="260" y1="122" x2="283" y2="140"/><line x1="260" y1="177" x2="283" y2="185"/>
+    <line x1="260" y1="232" x2="283" y2="225"/><line x1="260" y1="287" x2="283" y2="270"/>
+  </g>
+
+  <!-- etap 2 -->
+  <g font-size="13" fill="#222">
+    <rect x="410" y="133" width="120" height="34" rx="5" fill="#ffffff" stroke="#E25A1C"/><text x="470" y="155" text-anchor="middle">zadanie, wątek 1</text>
+    <rect x="410" y="188" width="120" height="34" rx="5" fill="#ffffff" stroke="#E25A1C"/><text x="470" y="210" text-anchor="middle">zadanie, wątek 2</text>
+    <rect x="410" y="243" width="120" height="34" rx="5" fill="#ffffff" stroke="#E25A1C"/><text x="470" y="265" text-anchor="middle">zadanie, wątek 3</text>
+  </g>
+  <g stroke="#555" stroke-width="1.4" marker-end="url(#arr)">
+    <line x1="390" y1="160" x2="408" y2="150"/><line x1="390" y1="205" x2="408" y2="205"/><line x1="390" y1="250" x2="408" y2="260"/>
+  </g>
+
+  <g font-size="14" fill="#222">
+    <text x="30" y="350">• 1 partycja = 1 zadanie, wykonywane przez <tspan font-weight="bold">jeden wątek</tspan></text>
+    <text x="42" y="370">od początku do końca etapu</text>
+    <text x="30" y="398">• zadania są niezależne – nie widzą swoich danych</text>
+    <text x="30" y="426">• dane przechodzą do innej partycji <tspan font-weight="bold">tylko przez shuffle</tspan>:</text>
+    <text x="42" y="446">zapis i odczyt, jak między różnymi maszynami</text>
+    <text x="30" y="474">• większy narzut na jednej maszynie, ale <tspan font-weight="bold">ten sam kod</tspan></text>
+    <text x="42" y="494">działa na klastrze (zadania na innych maszynach)</text>
+    <text x="30" y="530" fill="#555">Odpowiednik złączenia z małą tabelą: broadcast join –</text>
+    <text x="30" y="550" fill="#555">kopia małej tabeli trafia do każdego executora.</text>
+  </g>
+
+  <!-- ===================== polars-bio ===================== -->
+  <rect x="570" y="10" width="540" height="580" rx="10" fill="#F3FAFB" stroke="#0A7E8C" stroke-width="1.5"/>
+  <text x="840" y="40" text-anchor="middle" font-size="18" font-weight="bold" fill="#07606B">polars-bio (DataFusion)</text>
+  <text x="840" y="60" text-anchor="middle" font-size="13" fill="#555">jeden proces, wspólna pamięć, target_partitions = n</text>
+
+  <!-- wspólny indeks -->
+  <rect x="590" y="78" width="500" height="36" rx="6" fill="#CBE8EC" stroke="#0A7E8C"/>
+  <text x="840" y="101" text-anchor="middle" font-size="13" fill="#222"><tspan font-weight="bold">indeks eksonów</tspan> – zbudowany raz, wspólny dla wszystkich wątków (tylko odczyt)</text>
+
+  <!-- partycje jako strumienie porcji -->
+  <g font-size="13" fill="#222">
+    <rect x="590" y="140" width="90" height="30" rx="5" fill="#DDF1F3" stroke="#0A7E8C"/><text x="635" y="160" text-anchor="middle">partycja 1</text>
+    <rect x="590" y="185" width="90" height="30" rx="5" fill="#DDF1F3" stroke="#0A7E8C"/><text x="635" y="205" text-anchor="middle">partycja 2</text>
+    <rect x="590" y="230" width="90" height="30" rx="5" fill="#DDF1F3" stroke="#0A7E8C"/><text x="635" y="250" text-anchor="middle">partycja 3</text>
+    <rect x="590" y="275" width="90" height="30" rx="5" fill="#DDF1F3" stroke="#0A7E8C"/><text x="635" y="295" text-anchor="middle">partycja 4</text>
+  </g>
+  <g fill="#ffffff" stroke="#0A7E8C">
+    <rect x="695" y="143" width="24" height="24" rx="3"/><rect x="725" y="143" width="24" height="24" rx="3"/><rect x="755" y="143" width="24" height="24" rx="3"/><rect x="785" y="143" width="24" height="24" rx="3"/>
+    <rect x="695" y="188" width="24" height="24" rx="3"/><rect x="725" y="188" width="24" height="24" rx="3"/><rect x="755" y="188" width="24" height="24" rx="3"/>
+    <rect x="695" y="233" width="24" height="24" rx="3"/><rect x="725" y="233" width="24" height="24" rx="3"/><rect x="755" y="233" width="24" height="24" rx="3"/><rect x="785" y="233" width="24" height="24" rx="3"/>
+    <rect x="695" y="278" width="24" height="24" rx="3"/><rect x="725" y="278" width="24" height="24" rx="3"/>
+  </g>
+  <text x="752" y="325" text-anchor="middle" font-size="12" fill="#555">porcje danych (Arrow)</text>
+
+  <!-- pula wątków -->
+  <rect x="890" y="135" width="200" height="175" rx="8" fill="#ffffff" stroke="#0A7E8C"/>
+  <text x="990" y="155" text-anchor="middle" font-size="13" font-weight="bold" fill="#07606B">pula wątków</text>
+  <text x="990" y="171" text-anchor="middle" font-size="12" fill="#555">(work stealing)</text>
+  <g font-size="13" fill="#222">
+    <rect x="925" y="183" width="130" height="30" rx="15" fill="#DDF1F3" stroke="#0A7E8C"/><text x="990" y="203" text-anchor="middle">wątek A</text>
+    <rect x="925" y="223" width="130" height="30" rx="15" fill="#DDF1F3" stroke="#0A7E8C"/><text x="990" y="243" text-anchor="middle">wątek B</text>
+    <rect x="925" y="263" width="130" height="30" rx="15" fill="#DDF1F3" stroke="#0A7E8C"/><text x="990" y="283" text-anchor="middle">wątek C</text>
+  </g>
+  <!-- porcje z różnych partycji trafiają do różnych wątków -->
+  <g stroke="#0A7E8C" stroke-width="1.4" fill="none" marker-end="url(#arrT)">
+    <path d="M809,155 C860,155 880,240 923,240"/>
+    <path d="M779,200 C850,200 880,198 923,198"/>
+    <path d="M809,245 C860,245 880,282 923,280"/>
+    <path d="M749,290 C850,300 870,205 923,203"/>
+  </g>
+  <!-- wątki czytają wspólny indeks -->
+  <g stroke="#0A7E8C" stroke-width="1.2" stroke-dasharray="4 3" fill="none" marker-end="url(#arrT)">
+    <path d="M1070,183 C1080,150 1080,130 1060,116"/>
+  </g>
+
+  <g font-size="14" fill="#222">
+    <text x="590" y="350">• partycja = strumień porcji danych; <tspan font-weight="bold">nie jest</tspan></text>
+    <text x="602" y="370"><tspan font-weight="bold">przypięta do wątku</tspan> – wolny wątek bierze kolejną</text>
+    <text x="602" y="390">porcję z dowolnej partycji</text>
+    <text x="590" y="418">• porcje przechodzą między partycjami <tspan font-weight="bold">w pamięci</tspan>,</text>
+    <text x="602" y="438">bez serializacji i zapisu na dysk</text>
+    <text x="590" y="466">• wspólne struktury, np. indeks eksonów, budowane raz</text>
+    <text x="602" y="486">i czytane przez wszystkie wątki</text>
+    <text x="590" y="514">• mniejszy narzut, ale skala: <tspan font-weight="bold">jedna maszyna</tspan></text>
+    <text x="590" y="550" fill="#555">repartition_joins=false: pierwsza tabela overlap() → wspólny</text>
+    <text x="590" y="570" fill="#555">indeks; druga przechodzi przez niego partycjami, równolegle.</text>
+  </g>
+</svg>
