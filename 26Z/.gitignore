@@ -1,0 +1,11 @@
+wyniki/
+cromwell-executions/
+cromwell-workflow-logs/
+spark-warehouse/
+metastore_db/
+derby.log
+hc.log
+.ipynb_checkpoints/
+__pycache__/
+*.nowa.*
+*.moje-tmp

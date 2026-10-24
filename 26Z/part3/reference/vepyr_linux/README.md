@@ -1,6 +1,6 @@
 # Porównanie VEP i vepyr na Linuksie
 
-`comparison.png` jest osadzony na początku C5 notebooka, a `comparison.pdf` na slajdzie 14. Generowanie: `scripts/plot_vepyr_reference.py`; skrypt wyłącznie rysuje zapisane dane i nie wykonuje benchmarku.
+Wykres porównania jest osadzony na początku C5 notatnika 03; powstał z danych w `summary.tsv` i `vep_summary.tsv` (sam wykres nie wykonuje benchmarku).
 
 ## Dane źródłowe
 

@@ -1,33 +1,38 @@
 #!/bin/bash
-# Szybki test środowiska warsztatu: docker run --rm tgambin65716/omics-bigdata:2026.10 workshop-check
+# Szybki test narzędzi w obrazie warsztatu (bez danych): docker run --rm tgambin65716/omics-bigdata:2026.10 workshop-check
 set -uo pipefail
 ok=0
 check() {
     local label=$1; shift
     if out=$("$@" 2>&1); then
-        printf '  [OK]   %-28s %s\n' "$label" "$(echo "$out" | tail -1 | cut -c1-80)"
+        printf '  [OK]   %-24s %s\n' "$label" "$(echo "$out" | grep -v 'Picked up' | tail -1 | cut -c1-80)"
     else
-        printf '  [BŁĄD] %-28s\n%s\n' "$label" "$(echo "$out" | tail -5)"
+        printf '  [BŁĄD] %-24s\n%s\n' "$label" "$(echo "$out" | tail -5)"
         ok=1
     fi
 }
 echo "Architektura: $(uname -m) | CPU: $(nproc) | RAM: $(free -g | awk '/Mem/{print $2}') GiB"
-check "Java"            bash -c 'java -version 2>&1 | grep version'
-check "bwa"             bash -c 'bwa 2>&1 | grep Version'
-check "samtools"        bash -c 'samtools --version | head -1'
-check "bcftools"        bash -c 'bcftools --version | head -1'
-check "GATK"            bash -c 'gatk --version 2>/dev/null | grep -i "gatk\|version" | head -1'
-check "FastQC"          fastqc --version
-check "MultiQC"         multiqc --version
-check "Biblioteki Python" python -c 'import pyspark, polars_bio, vepyr, pysam, polars; print("pyspark", pyspark.__version__, "| polars-bio", polars_bio.__version__, "| vepyr", vepyr.__version__)'
+check "Java"             bash -c 'java -version 2>&1 | grep version'
+check "bwa"              bash -c 'bwa 2>&1 | grep Version'
+check "samtools"         bash -c 'samtools --version | head -1'
+check "bcftools"         bash -c 'bcftools --version | head -1'
+check "GATK"             bash -c 'gatk --version 2>/dev/null | grep -i "gatk" | head -1'
+check "FastQC"           fastqc --version
+check "MultiQC"          multiqc --version
+check "git"              git --version
+check "gcloud (kubełek)" bash -c 'gcloud storage ls gs://gatk-tutorials/workshop_1906/2-germline/ref/ | grep -c ref | sed "s/^/obiekty w gs:\/\/gatk-tutorials: /"'
 check "Spark (local[*])" python -c '
 from pyspark.sql import SparkSession
 s = SparkSession.builder.master("local[*]").config("spark.driver.host","127.0.0.1").config("spark.driver.bindAddress","127.0.0.1").config("spark.ui.enabled","false").getOrCreate()
 s.sparkContext.setLogLevel("ERROR")
-n = s.read.parquet("/opt/workshop/data/trio/fastq_parquet").count(); s.stop(); print("odczyty FASTQ:", n)'
-check "polars-bio"      python -c '
-import polars_bio as pb, polars as pl
-print("SNV w tabeli:", pl.scan_parquet("/opt/workshop/part3/real_data/HG002_snv_intervals.parquet").select(pl.len()).collect().item())'
-check "Cromwell"        bash -c 'cd $(mktemp -d) && printf "version 1.0\nworkflow t { call h }\ntask h { command <<< echo ok >>> output { String s = read_string(stdout()) } }\n" > t.wdl && java -jar $CROMWELL_JAR run t.wdl 2>&1 | grep -q "Succeeded" && echo "workflow Succeeded"'
+n = s.range(1000000).selectExpr("sum(id)").first()[0]; s.stop(); print("suma 0..999999 =", n)'
+check "polars-bio, vepyr" python -c '
+import polars as pl, polars_bio as pb, vepyr
+a = pl.DataFrame({"chrom": ["chr1", "chr1"], "start": [100, 500], "end": [200, 600]})
+b = pl.DataFrame({"chrom": ["chr1"], "start": [150], "end": [550]})
+r = pb.overlap(a, b)
+n = (r.collect() if hasattr(r, "collect") else r).height
+print("polars-bio", pb.__version__, "| vepyr", vepyr.__version__, "| overlap:", n, "pary")'
+check "Cromwell"         bash -c 'cd $(mktemp -d) && printf "version 1.0\nworkflow t { call h }\ntask h { command <<< echo ok >>> output { String s = read_string(stdout()) } }\n" > t.wdl && java -jar $CROMWELL_JAR run t.wdl 2>&1 | grep -q "Succeeded" && echo "workflow Succeeded"'
 if [ $ok -eq 0 ]; then echo "Środowisko gotowe."; else echo "Są błędy – prześlij ten wynik prowadzącym."; fi
 exit $ok

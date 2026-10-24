@@ -1,6 +1,6 @@
 # Skalowanie polars-bio — wykres z dokumentacji
 
-`scalability.png` to niezmieniony wykres **Thread scalability (dataset 8-7)** z [publikacji projektu z 20 lutego 2026](https://biodatageeks.org/polars-bio/blog/2026/02/20/interval-operations-benchmark--update-february-2026/#thread-scalability-dataset-8-7).
+Wykres osadzony w C3 notatnika 03 to niezmieniony wykres **Thread scalability (dataset 8-7)** z [publikacji projektu z 20 lutego 2026](https://biodatageeks.org/polars-bio/blog/2026/02/20/interval-operations-benchmark--update-february-2026/#thread-scalability-dataset-8-7).
 
 - Biblioteka w opublikowanym pomiarze: **polars-bio 0.24.0**. Ćwiczenia instalują **0.36.0**.
 - Dane AIList: para **8-7**, ex-rna (około 9,945 mln przedziałów) × ex-anno (około 1,194 mln). Artykuł podaje 307 184 634 przecięcia dla współrzędnych od 1.

@@ -3,7 +3,7 @@
 # Parquet z benchmarków polars-bio: ex-rna (~10 mln mapowań odczytów direct RNA) i ex-anno (~1,2 mln elementów
 # adnotacji GENCODE). Z archiwum (419 MB) zostawiamy tylko te dwa zbiory (~91 MB).
 set -euo pipefail
-OUT=${1:-/opt/workshop/part3/ailist}
+OUT=${1:-$HOME/work/data/part3/ailist}
 URL="https://drive.usercontent.google.com/download?id=1lctmude31mSAh9fWjI60K1bDrbeDPGfm&export=download&confirm=t"
 SHA256=dd582741c51c6bd6bccf31daee0c45f8e64a1499decbcdd1525ecef50ccaa114
 tmp=$(mktemp -d)

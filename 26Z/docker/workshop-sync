@@ -1,0 +1,66 @@
+#!/bin/bash
+# Synchronizacja materiałów warsztatu przy starcie kontenera (wywoływane z before-notebook.d):
+#  1) klonuje lub aktualizuje repozytorium z notatnikami do ~/work/edugen-notebooks (tylko katalog 26Z),
+#  2) uruchamia skrypt startowy z repozytorium (26Z/setup/on_start.sh), np. przygotowanie danych.
+# Logika materiałów i danych jest w repozytorium, więc obraz nie wymaga przebudowy przy ich zmianach.
+# Plik zmieniony przez uczestnika nie jest nadpisywany: nowa wersja z repozytorium trafia obok jako *.nowa.<rozszerzenie>.
+REPO_URL="${WORKSHOP_REPO:-https://github.com/biodatageeks/edugen-notebooks.git}"
+BRANCH="${WORKSHOP_BRANCH:-feat/sharding-wdl}"
+SUBDIR="${WORKSHOP_DIR:-26Z}"
+REPO="${HOME}/work/edugen-notebooks"
+
+log() { echo "[warsztaty] $*"; }
+
+clone() {
+    log "Pobieram notatniki: ${REPO_URL} (${BRANCH}, katalog ${SUBDIR})"
+    rm -rf "${REPO}.tmp"
+    if timeout 300 git clone -q --filter=blob:none --sparse --branch "${BRANCH}" "${REPO_URL}" "${REPO}.tmp" &&
+        git -C "${REPO}.tmp" sparse-checkout set "${SUBDIR}" &&
+        git -C "${REPO}.tmp" config core.fileMode false; then
+        mv "${REPO}.tmp" "${REPO}"
+        log "Notatniki: ~/work/edugen-notebooks/${SUBDIR}"
+    else
+        rm -rf "${REPO}.tmp"
+        log "Nie udało się pobrać repozytorium (brak internetu?). Uruchom kontener ponownie, gdy będzie sieć."
+    fi
+}
+
+update() {
+    cd "${REPO}" || return
+    if ! timeout 120 git fetch -q origin "${BRANCH}"; then
+        log "Brak połączenia z repozytorium – pracujesz na dotychczasowej wersji notatników."
+        return
+    fi
+    if [ "$(git rev-parse HEAD)" = "$(git rev-parse FETCH_HEAD)" ]; then
+        log "Notatniki są aktualne."
+        return
+    fi
+    # pliki zmienione i lokalnie, i w repozytorium: wersję uczestnika odkładamy na bok na czas aktualizacji
+    local conflicted=() f
+    while IFS= read -r f; do
+        if [ -n "${f}" ] && [ -e "${f}" ] && ! git diff --quiet HEAD -- "${f}"; then
+            mv "${f}" "${f}.moje-tmp" && git checkout -q HEAD -- "${f}" && conflicted+=("${f}")
+        fi
+    done < <(git diff --name-only HEAD FETCH_HEAD -- "${SUBDIR}")
+    local updated=0
+    if git reset -q --keep FETCH_HEAD; then
+        updated=1
+        log "Zaktualizowano notatniki do najnowszej wersji."
+    else
+        log "Nie udało się zaktualizować notatników."
+    fi
+    for f in "${conflicted[@]}"; do
+        if [ "${updated}" = 1 ] && [ -e "${f}" ]; then
+            cp "${f}" "${f%.*}.nowa.${f##*.}"
+            log "Twoja wersja ${f} zostaje; nowa wersja z repozytorium: ${f%.*}.nowa.${f##*.}"
+        fi
+        mv "${f}.moje-tmp" "${f}"
+    done
+}
+
+mkdir -p "${HOME}/work"
+if [ -d "${REPO}/.git" ]; then update; else clone; fi
+if [ -f "${REPO}/${SUBDIR}/setup/on_start.sh" ]; then
+    (cd "${REPO}/${SUBDIR}" && bash setup/on_start.sh) || log "Skrypt startowy z repozytorium zakończył się błędem (szczegóły wyżej)."
+fi
+exit 0

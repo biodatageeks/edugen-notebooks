@@ -2,7 +2,7 @@
 # Dane trio (mother/father/son) z publicznego kubełka gs://gatk-tutorials (GATK workshop 1906):
 # referencja b37 (fragment chr20), BAM -> FASTQ (pary przeplecione, dla bwa mem -p), indeks BWA.
 set -euo pipefail
-OUT=${1:-/opt/workshop/data/trio}
+OUT=${1:-$HOME/work/data/trio}
 BASE=https://storage.googleapis.com/gatk-tutorials/workshop_1906/2-germline
 mkdir -p "$OUT/ref" "$OUT/bam" "$OUT/fastq"
 
