@@ -20,10 +20,10 @@ check "GATK"             bash -c 'gatk --version 2>/dev/null | grep -i "gatk" | 
 check "FastQC"           fastqc --version
 check "MultiQC"          multiqc --version
 check "git"              git --version
-check "gcloud (kubełek)" bash -c 'gcloud storage ls gs://gatk-tutorials/workshop_1906/2-germline/ref/ | grep -c ref | sed "s/^/obiekty w gs:\/\/gatk-tutorials: /"'
+check "gcloud (kubełek)" bash -c 'set -o pipefail; gcloud storage ls gs://gatk-tutorials/workshop_1906/2-germline/ref/ | grep -c ref | sed "s/^/obiekty w gs:\/\/gatk-tutorials: /"'
 check "Spark (local[*])" python -c '
 from pyspark.sql import SparkSession
-s = SparkSession.builder.master("local[*]").config("spark.driver.host","127.0.0.1").config("spark.driver.bindAddress","127.0.0.1").config("spark.ui.enabled","false").getOrCreate()
+s = SparkSession.builder.master("local[*]").config("spark.driver.host","127.0.0.1").config("spark.driver.bindAddress","127.0.0.1").config("spark.ui.enabled","false").config("spark.ui.showConsoleProgress","false").getOrCreate()
 s.sparkContext.setLogLevel("ERROR")
 n = s.range(1000000).selectExpr("sum(id)").first()[0]; s.stop(); print("suma 0..999999 =", n)'
 check "polars-bio, vepyr" python -c '

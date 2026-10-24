@@ -94,7 +94,8 @@ RUN chmod +x /usr/local/bin/workshop-sync /usr/local/bin/workshop-check && \
       bedtools --version; /opt/gatk/gatk --version 2>/dev/null | head -1; fastqc --version; \
       multiqc --version; gcloud version 2>/dev/null | head -1; echo "cromwell ${CROMWELL_VERSION}"; \
       su ${NB_USER} -c "/opt/conda/bin/pip freeze"; } > /opt/workshop/VERSIONS.txt 2>&1 && \
-    rm -rf /home/${NB_USER}/.config/gcloud
+    rm -rf /home/${NB_USER}/.config/gcloud && mkdir -p /home/${NB_USER}/.config && \
+    chown -R ${NB_UID}:${NB_GID} /home/${NB_USER}/.config
 USER ${NB_UID}
 
 EXPOSE 8888 4040
