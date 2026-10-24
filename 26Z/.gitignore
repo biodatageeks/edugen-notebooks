@@ -9,3 +9,4 @@ hc.log
 __pycache__/
 *.nowa.*
 *.moje-tmp
+*.nowa-*

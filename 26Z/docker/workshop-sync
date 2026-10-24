@@ -35,6 +35,13 @@ update() {
         log "Notatniki są aktualne."
         return
     fi
+    # Logika aktualizacji z repozytorium (w wersji z nowego commita), żeby można ją było poprawiać bez obrazu
+    if git cat-file -e "FETCH_HEAD:${SUBDIR}/setup/update_repo.sh" 2>/dev/null; then
+        git show "FETCH_HEAD:${SUBDIR}/setup/update_repo.sh" > /tmp/update_repo.sh
+        bash /tmp/update_repo.sh "${SUBDIR}"
+        return
+    fi
+    # Wersja wbudowana (gdy repozytorium nie ma skryptu aktualizacji)
     # pliki zmienione i lokalnie, i w repozytorium: wersję uczestnika odkładamy na bok na czas aktualizacji
     local conflicted=() f
     while IFS= read -r f; do
