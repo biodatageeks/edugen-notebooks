@@ -19,7 +19,7 @@ Wszystko trafia do folderu **`omics-2026`** w Twoim katalogu domowym.
 
 ## Przed zajęciami – zrób to dziś (około 30–45 minut)
 
-Obraz (około 3,5 GB) i dane (około 1,2 GB) **pobierz wcześniej** – pobieranie przez 20 osób jednocześnie na sali nie zadziała.
+Obraz (około 3,5 GB) i dane (około 1,2 GB) **pobierz wcześniej** – pobieranie przez 20 osób jednocześnie na sali nie zadziała. Notatniki otworzymy razem na zajęciach.
 
 ### 1. Zainstaluj Dockera
 
@@ -52,20 +52,25 @@ docker run --rm tgambin65716/omics-bigdata:2026.10 workshop-check
 
 Test trwa około minuty. Każda linia powinna zaczynać się od `[OK]`, a na końcu powinien pojawić się napis **`Środowisko gotowe.`** Jeśli pojawi się `[BŁĄD]`, prześlij prowadzącym cały wynik tego polecenia jeszcze przed zajęciami.
 
-### 5. Pierwsze uruchomienie: notatniki i dane
+### 5. Pobierz dane (około 1,2 GB)
 
-Utwórz folder na pliki warsztatu (to samo polecenie w terminalu i w PowerShellu):
+Utwórz folder na pliki warsztatu i pobierz do niego dane. **macOS i Linux** (terminal):
 
 ```
 mkdir "$HOME/omics-2026"
+docker run --rm -v "$HOME/omics-2026:/home/jovyan/work" tgambin65716/omics-bigdata:2026.10 workshop-sync
 ```
 
-Następnie uruchom kontener poleceniem z sekcji [Uruchomienie](#uruchomienie). Za pierwszym razem kontener:
-1. pobiera notatniki z repozytorium,
-2. pobiera i przygotowuje dane (około 1,2 GB) – w terminalu widać kolejne etapy `[dane] ...: OK`; zwykle trwa to **5–15 minut**,
-3. uruchamia JupyterLab.
+**Windows** (PowerShell):
 
-Gdy w terminalu pojawi się `[dane] Wszystkie dane gotowe` i adres `http://127.0.0.1:8888/lab`, otwórz go w przeglądarce. Powinny być widoczne trzy notatniki. Zamknij kontener (`Ctrl+C`) – gotowe.
+```
+mkdir "$HOME/omics-2026"
+docker run --rm -v "${HOME}\omics-2026:/home/jovyan/work" tgambin65716/omics-bigdata:2026.10 workshop-sync
+```
+
+W terminalu widać kolejne etapy `[dane] ...: OK`; zwykle trwa to **5–15 minut**. Na końcu powinien pojawić się napis **`[dane] Wszystkie dane gotowe`**, a polecenie się zakończy. Jeśli pobieranie się przerwie, uruchom polecenie ponownie – gotowe etapy nie są powtarzane.
+
+W folderze `omics-2026` pojawi się też katalog `edugen-notebooks` z notatnikami – nie musisz go jeszcze otwierać. Na zajęciach kontener sam pobierze ich aktualną wersję.
 
 ---
 
@@ -83,7 +88,7 @@ docker run --rm -it --name omics -p 127.0.0.1:8888:8888 -p 127.0.0.1:4040:4040 -
 docker run --rm -it --name omics -p 127.0.0.1:8888:8888 -p 127.0.0.1:4040:4040 -v "${HOME}\omics-2026:/home/jovyan/work" tgambin65716/omics-bigdata:2026.10
 ```
 
-Następnie otwórz w przeglądarce **http://127.0.0.1:8888** – JupyterLab otworzy się w katalogu z notatnikami (`edugen-notebooks/26Z`). Notatniki uruchamiamy kernelem **Python 3 (ipykernel)** – jest jedynym kernelem w obrazie i wybiera się sam.
+Na początku kontener pobiera aktualną wersję notatników z repozytorium (i dane, jeśli nie zostały pobrane wcześniej). Następnie otwórz w przeglądarce **http://127.0.0.1:8888** – JupyterLab otworzy się w katalogu z notatnikami (`edugen-notebooks/26Z`). Notatniki uruchamiamy kernelem **Python 3 (ipykernel)** – jest jedynym kernelem w obrazie i wybiera się sam.
 
 | Opcja | Znaczenie |
 |---|---|
@@ -145,7 +150,7 @@ Komunikaty o aktualizacji widać w terminalu na początku (linie `[warsztaty] ..
 ### Jak to działa
 
 * `docker/Dockerfile` – obraz z samymi narzędziami (bez notatników i danych); zmieniamy go rzadko.
-* `docker/workshop-sync` – uruchamiany przy każdym starcie kontenera (przed JupyterLabem): klonuje to repozytorium (branch `feat/sharding-wdl`, tylko katalog `26Z`, sparse checkout) do `~/work/edugen-notebooks` albo je aktualizuje (pliki zmienione przez uczestnika zostają, nowa wersja trafia obok jako `*.nowa.*`), a potem uruchamia **`26Z/setup/on_start.sh` z repozytorium**. Zmienne `WORKSHOP_REPO`, `WORKSHOP_BRANCH`, `WORKSHOP_DIR` pozwalają wskazać inne repozytorium, branch lub katalog.
+* `docker/workshop-sync` – uruchamiany przy każdym starcie kontenera z podmontowanym folderem `~/work` (przed JupyterLabem; bez `-v` nic nie pobiera, `WORKSHOP_SYNC=0` go wyłącza): klonuje to repozytorium (branch `feat/sharding-wdl`, tylko katalog `26Z`, sparse checkout) do `~/work/edugen-notebooks` albo je aktualizuje (pliki zmienione przez uczestnika zostają, nowa wersja trafia obok jako `*.nowa.*`), a potem uruchamia **`26Z/setup/on_start.sh` z repozytorium**. Zmienne `WORKSHOP_REPO`, `WORKSHOP_BRANCH`, `WORKSHOP_DIR` pozwalają wskazać inne repozytorium, branch lub katalog.
 * `setup/on_start.sh` – przygotowuje dane (`setup/prepare_data.sh` → `~/work/data`), jeśli ich brak albo zmieniła się `DATA_VERSION`. Zmiany w notatnikach, skryptach i danych **wystarczy wypchnąć do repozytorium** – uczestnicy dostaną je przy następnym uruchomieniu kontenera, bez pobierania nowego obrazu.
 
 ### Dane

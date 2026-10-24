@@ -58,7 +58,15 @@ update() {
     done
 }
 
-mkdir -p "${HOME}/work"
+# Raz na kontener (skrypt startowy i jawne wywołanie "workshop-sync" nie dublują pracy)
+[ -f /tmp/.workshop-synced ] && exit 0
+touch /tmp/.workshop-synced
+if [ "${WORKSHOP_SYNC:-1}" = 0 ]; then exit 0; fi
+# Tylko z podmontowanym folderem roboczym (-v ...:/home/jovyan/work) – np. "workshop-check" niczego nie pobiera
+if ! mountpoint -q "${HOME}/work"; then
+    log "Folder ~/work nie jest podmontowany (brak opcji -v) – pomijam pobieranie notatników i danych."
+    exit 0
+fi
 if [ -d "${REPO}/.git" ]; then update; else clone; fi
 if [ -f "${REPO}/${SUBDIR}/setup/on_start.sh" ]; then
     (cd "${REPO}/${SUBDIR}" && bash setup/on_start.sh) || log "Skrypt startowy z repozytorium zakończył się błędem (szczegóły wyżej)."
