@@ -9,5 +9,5 @@ if [ "$(cat "${DATA}/.gotowe" 2>/dev/null)" = "${DATA_VERSION}" ]; then
     exit 0
 fi
 echo "[warsztaty] Pobieram i przygotowuję dane warsztatu (około 1,2 GB, zwykle 5–15 minut; tylko za pierwszym razem)."
-echo "[warsztaty] JupyterLab uruchomi się po zakończeniu."
+echo "[warsztaty] Przy zwykłym uruchomieniu JupyterLab wystartuje po zakończeniu."
 bash setup/prepare_data.sh "${DATA}" && echo "${DATA_VERSION}" > "${DATA}/.gotowe"
