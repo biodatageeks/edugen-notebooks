@@ -1,13 +1,6 @@
 """Pomiary równoległości na laptopie uczestnika (wersja dockerowa warsztatu)."""
-import json
 import os
-import subprocess
-import sys
-import tempfile
 import time
-from pathlib import Path
-
-SCRIPTS = Path(__file__).resolve().parent
 
 
 def thread_counts(limit=None):
@@ -16,25 +9,22 @@ def thread_counts(limit=None):
     return sorted({n for n in (1, 2, 4, 8, 16, limit) if n <= limit})
 
 
-def measure_threads(task, inputs, threads=None, repeats=1):
-    """Uruchamia to samo zapytanie przy różnej liczbie wątków, każdy pomiar w osobnym procesie."""
+def measure_partitions(run, threads=None, repeats=2):
+    """Czas wywołania run() przy różnej liczbie partycji DataFusion (polars-bio); zwraca {partycje: najlepszy czas}."""
+    import polars_bio as pb
     results = []
     for n in threads or thread_counts():
-        env = os.environ.copy()
-        env.update(POLARS_MAX_THREADS=str(n), RAYON_NUM_THREADS=str(n), OMP_NUM_THREADS=str(n))
+        pb.set_option('datafusion.execution.target_partitions', str(n))
         for _ in range(repeats):
-            with tempfile.NamedTemporaryFile(suffix='.json') as out:
-                cmd = [sys.executable, str(SCRIPTS / 'measure_threads.py'), task, str(n), out.name,
-                       *map(str, inputs)]
-                done = subprocess.run(cmd, env=env, capture_output=True, text=True, timeout=900)
-                if done.returncode:
-                    raise RuntimeError('Pomiar przerwany:\n' + done.stderr[-3000:])
-                record = json.loads(Path(out.name).read_text())
-            results.append(record)
-            print(f"{task}: {n} wątk.: {record['seconds']:.2f} s, {record['rows']:,} wierszy".replace(',', ' '),
-                  flush=True)
-    assert len({r['fingerprint'] for r in results}) == 1, 'Wyniki różnią się między pomiarami.'
-    return results
+            start = time.perf_counter()
+            value = run()
+            seconds = time.perf_counter() - start
+            results.append(dict(threads=n, seconds=seconds, result=value))
+            number = f'{value:,}'.replace(',', ' ')
+            print(f'partycje: {n} | {seconds:.2f} s | wynik: {number}', flush=True)
+    pb.set_option('datafusion.execution.target_partitions', '1')
+    assert len({r['result'] for r in results}) == 1, 'Wyniki różnią się między pomiarami.'
+    return best_times(results)
 
 
 def best_times(results):
