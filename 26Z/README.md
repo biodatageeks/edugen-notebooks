@@ -120,6 +120,9 @@ To zwykły folder na Twoim dysku – możesz go otwierać, kopiować i archiwizo
 |---|---|
 | plik przez Ciebie niezmieniony, nowa wersja w repozytorium | plik zostaje zaktualizowany |
 | plik przez Ciebie zmieniony (także przez uruchomienie komórek), nowa wersja w repozytorium | Twój plik zostaje bez zmian, nowa wersja pojawia się obok jako `*.nowa.ipynb` |
+| kolejna nowa wersja, a plik `*.nowa.ipynb` jest nietknięty | `*.nowa.ipynb` zostaje zastąpiony najnowszą wersją |
+| kolejna nowa wersja, a Ty pracujesz już w `*.nowa.ipynb` | Twój `*.nowa.ipynb` zostaje, najnowsza wersja pojawia się jako `*.nowa-<numer>.ipynb` |
+| plik przez Ciebie usunięty | wraca w najnowszej wersji (tak można „zresetować” pojedynczy notatnik) |
 | Twoje własne pliki i wyniki (`wyniki/`, `cromwell-executions/`, ...) | nigdy nie są zmieniane |
 
 Komunikaty o aktualizacji widać w terminalu na początku (linie `[warsztaty] ...`).
@@ -150,7 +153,7 @@ Komunikaty o aktualizacji widać w terminalu na początku (linie `[warsztaty] ..
 ### Jak to działa
 
 * `docker/Dockerfile` – obraz z samymi narzędziami (bez notatników i danych); zmieniamy go rzadko.
-* `docker/workshop-sync` – uruchamiany przy każdym starcie kontenera z podmontowanym folderem `~/work` (przed JupyterLabem; bez `-v` nic nie pobiera, `WORKSHOP_SYNC=0` go wyłącza): klonuje to repozytorium (branch `feat/sharding-wdl`, tylko katalog `26Z`, sparse checkout) do `~/work/edugen-notebooks` albo je aktualizuje (pliki zmienione przez uczestnika zostają, nowa wersja trafia obok jako `*.nowa.*`), a potem uruchamia **`26Z/setup/on_start.sh` z repozytorium**. Zmienne `WORKSHOP_REPO`, `WORKSHOP_BRANCH`, `WORKSHOP_DIR` pozwalają wskazać inne repozytorium, branch lub katalog.
+* `docker/workshop-sync` – uruchamiany przy każdym starcie kontenera z podmontowanym folderem `~/work` (przed JupyterLabem; bez `-v` nic nie pobiera, `WORKSHOP_SYNC=0` go wyłącza): klonuje to repozytorium (branch `feat/sharding-wdl`, tylko katalog `26Z`, sparse checkout) do `~/work/edugen-notebooks` albo je aktualizuje – logikę aktualizacji (`setup/update_repo.sh`) uruchamia w wersji z najnowszego commita, więc także ją można zmieniać bez przebudowy obrazu – a potem uruchamia **`26Z/setup/on_start.sh` z repozytorium**. Zmienne `WORKSHOP_REPO`, `WORKSHOP_BRANCH`, `WORKSHOP_DIR` pozwalają wskazać inne repozytorium, branch lub katalog.
 * `setup/on_start.sh` – przygotowuje dane (`setup/prepare_data.sh` → `~/work/data`), jeśli ich brak albo zmieniła się `DATA_VERSION`. Zmiany w notatnikach, skryptach i danych **wystarczy wypchnąć do repozytorium** – uczestnicy dostaną je przy następnym uruchomieniu kontenera, bez pobierania nowego obrazu.
 
 ### Dane
