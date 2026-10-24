@@ -1,0 +1,122 @@
+{
+  "vcf": {
+    "url": "https://ftp-trace.ncbi.nlm.nih.gov/ReferenceSamples/giab/release/AshkenazimTrio/HG002_NA24385_son/NISTv4.2.1/GRCh38/HG002_GRCh38_1_22_v4.2.1_benchmark.vcf.gz",
+    "sha256": "adb4d4a50048aa13353a06b84fcfcbca09a5d17525efaa4cea44f8822e81175c",
+    "index_sha256": "23162712553413b10f88916c28bd1238deb703a7237be2910440773beea71894",
+    "size": 156252944,
+    "sample": "HG002",
+    "assembly": "GRCh38",
+    "release": "GIAB v4.2.1"
+  },
+  "chr22_records": 50284,
+  "cache": {
+    "repo": "biodatageeks/vepyr_116_GRCh38_ensembl",
+    "revision": "15a048f0585a7a40d2d40cb1c2f7806638ee500b",
+    "files": [
+      {
+        "path": "variation/chr22.parquet",
+        "size": 388756098,
+        "sha256": "df31abcbd97d4b0d47d7420b54348ef9c185d6041acd7b398bbc4fde6715dd12",
+        "url": "https://huggingface.co/datasets/biodatageeks/vepyr_116_GRCh38_ensembl/resolve/15a048f0585a7a40d2d40cb1c2f7806638ee500b/variation/chr22.parquet"
+      },
+      {
+        "path": "variation/chrom_manifest.json",
+        "size": 46700,
+        "sha256": "09a42638e7f0bf28a7a2b30b37210cf335675e832f036a86530b8c966594fc89",
+        "url": "https://huggingface.co/datasets/biodatageeks/vepyr_116_GRCh38_ensembl/resolve/15a048f0585a7a40d2d40cb1c2f7806638ee500b/variation/chrom_manifest.json"
+      },
+      {
+        "path": "transcript/chr22.parquet",
+        "size": 3530340,
+        "sha256": "6b4ea8272e3bbb3daf3d4033243e0e7cd3ceb27eadc456317db0d938df09b008",
+        "url": "https://huggingface.co/datasets/biodatageeks/vepyr_116_GRCh38_ensembl/resolve/15a048f0585a7a40d2d40cb1c2f7806638ee500b/transcript/chr22.parquet"
+      },
+      {
+        "path": "transcript/chrom_manifest.json",
+        "size": 158572,
+        "sha256": "d7ba801341d8abaa599b0761b4d31daf8c2ac9fabfc926f707de0524f075acb4",
+        "url": "https://huggingface.co/datasets/biodatageeks/vepyr_116_GRCh38_ensembl/resolve/15a048f0585a7a40d2d40cb1c2f7806638ee500b/transcript/chrom_manifest.json"
+      },
+      {
+        "path": "exon/chr22.parquet",
+        "size": 1065995,
+        "sha256": "8574bf635e5f9801e4e3601b1bf3f90818dbb6460f4097370334b7b899c365f3",
+        "url": "https://huggingface.co/datasets/biodatageeks/vepyr_116_GRCh38_ensembl/resolve/15a048f0585a7a40d2d40cb1c2f7806638ee500b/exon/chr22.parquet"
+      },
+      {
+        "path": "exon/chrom_manifest.json",
+        "size": 159671,
+        "sha256": "770935c8e4eeab5ae09324ed2d643b3657e3f697155e524e388a8843d7451790",
+        "url": "https://huggingface.co/datasets/biodatageeks/vepyr_116_GRCh38_ensembl/resolve/15a048f0585a7a40d2d40cb1c2f7806638ee500b/exon/chrom_manifest.json"
+      },
+      {
+        "path": "translation_core/chr22.parquet",
+        "size": 3718453,
+        "sha256": "bcae5272ff9bb3cdde55a4bc6dcc6914db3d05c483139975288420a74520bd91",
+        "url": "https://huggingface.co/datasets/biodatageeks/vepyr_116_GRCh38_ensembl/resolve/15a048f0585a7a40d2d40cb1c2f7806638ee500b/translation_core/chr22.parquet"
+      },
+      {
+        "path": "translation_core/chrom_manifest.json",
+        "size": 146669,
+        "sha256": "711a534300643385725fb4f9776095b8a17c5699f2b3ac1e4c49e0fc0b85e574",
+        "url": "https://huggingface.co/datasets/biodatageeks/vepyr_116_GRCh38_ensembl/resolve/15a048f0585a7a40d2d40cb1c2f7806638ee500b/translation_core/chrom_manifest.json"
+      },
+      {
+        "path": "translation_sift/chr22.parquet",
+        "size": 97097029,
+        "sha256": "06a9ffc324783c49064113beafcbde5dcba70dc60468e1bc1d9c0d47f4407176",
+        "url": "https://huggingface.co/datasets/biodatageeks/vepyr_116_GRCh38_ensembl/resolve/15a048f0585a7a40d2d40cb1c2f7806638ee500b/translation_sift/chr22.parquet"
+      },
+      {
+        "path": "translation_sift/chrom_manifest.json",
+        "size": 148221,
+        "sha256": "a7e198ed8616016601c18a29e5a1168c5e5e2ec086a221c29db8565263feb996",
+        "url": "https://huggingface.co/datasets/biodatageeks/vepyr_116_GRCh38_ensembl/resolve/15a048f0585a7a40d2d40cb1c2f7806638ee500b/translation_sift/chrom_manifest.json"
+      },
+      {
+        "path": "regulatory/chr22.parquet",
+        "size": 157655,
+        "sha256": "6953f613f6d05ff43515d12a87317cab95e3dd90b1166e69ea2ad560a0629923",
+        "url": "https://huggingface.co/datasets/biodatageeks/vepyr_116_GRCh38_ensembl/resolve/15a048f0585a7a40d2d40cb1c2f7806638ee500b/regulatory/chr22.parquet"
+      },
+      {
+        "path": "regulatory/chrom_manifest.json",
+        "size": 1918,
+        "sha256": "d5d10e920db8be122d6182ddc5aee345f8e520a999f8f29c450b87b18388de11",
+        "url": "https://huggingface.co/datasets/biodatageeks/vepyr_116_GRCh38_ensembl/resolve/15a048f0585a7a40d2d40cb1c2f7806638ee500b/regulatory/chrom_manifest.json"
+      },
+      {
+        "path": "motif/chr22.parquet",
+        "size": 562364,
+        "sha256": "9e76ce8d624eea314aab924418f5b5cb70248f34c42017abf09e6be5345f8916",
+        "url": "https://huggingface.co/datasets/biodatageeks/vepyr_116_GRCh38_ensembl/resolve/15a048f0585a7a40d2d40cb1c2f7806638ee500b/motif/chr22.parquet"
+      },
+      {
+        "path": "motif/chrom_manifest.json",
+        "size": 1922,
+        "sha256": "4b164a59d784c72c1ffecfab87438ab1470c5fc84a49fb4fa4a2e5ae7c7b5eba",
+        "url": "https://huggingface.co/datasets/biodatageeks/vepyr_116_GRCh38_ensembl/resolve/15a048f0585a7a40d2d40cb1c2f7806638ee500b/motif/chrom_manifest.json"
+      }
+    ],
+    "verified_vepyr_version": "0.9.0"
+  },
+  "exons": {
+    "url": "https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_47/gencode.v47.basic.annotation.gtf.gz",
+    "sha256": "8858ec2557c2904f91e44aeda762759cd998ce663774245710cb52ad4dc334ee",
+    "size": 33706193,
+    "release": "GENCODE 47 basic",
+    "assembly": "GRCh38.p14",
+    "unique_exons": 513903,
+    "hg002_snv_records": 3458690,
+    "coordinates": "0-based half-open; GTF start minus one, end unchanged; SNV [POS-1, POS)"
+  },
+  "reference_fasta": {
+    "url": "https://hgdownload.soe.ucsc.edu/goldenPath/hg38/chromosomes/chr22.fa.gz",
+    "sha256": "05f9d97d6fbfd08a44ca45b50837ca2ae9c471f35ba79dffec04d2cb5eaaf695",
+    "size": 12255678,
+    "fasta_sha256": "ce3ee1ca39356238f7aee438a40a88b4f1b9d80b316b263e16fb12402212d10f",
+    "assembly": "GRCh38",
+    "contig": "chr22",
+    "length": 50818468
+  }
+}

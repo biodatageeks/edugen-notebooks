@@ -1,0 +1,6 @@
+*.sh text eol=lf
+*.wdl text eol=lf
+*.json text eol=lf
+*.py text eol=lf
+docker/workshop-check text eol=lf
+docker/Dockerfile text eol=lf

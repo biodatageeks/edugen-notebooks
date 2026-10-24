@@ -1,0 +1,5 @@
+cromwell-executions
+cromwell-workflow-logs
+**/.ipynb_checkpoints
+**/__pycache__
+**/spark-warehouse

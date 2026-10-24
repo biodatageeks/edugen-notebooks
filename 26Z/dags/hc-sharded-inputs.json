@@ -1,0 +1,12 @@
+{
+  "sharded_variant_calling.ref_fasta": "/opt/workshop/data/trio/ref/ref.fasta",
+  "sharded_variant_calling.ref_dict": "/opt/workshop/data/trio/ref/ref.dict",
+  "sharded_variant_calling.ref_fasta_fai": "/opt/workshop/data/trio/ref/ref.fasta.fai",
+  "sharded_variant_calling.ref_fasta_amb": "/opt/workshop/data/trio/ref/ref.fasta.amb",
+  "sharded_variant_calling.ref_fasta_ann": "/opt/workshop/data/trio/ref/ref.fasta.ann",
+  "sharded_variant_calling.ref_fasta_bwt": "/opt/workshop/data/trio/ref/ref.fasta.bwt",
+  "sharded_variant_calling.ref_fasta_pac": "/opt/workshop/data/trio/ref/ref.fasta.pac",
+  "sharded_variant_calling.ref_fasta_sa": "/opt/workshop/data/trio/ref/ref.fasta.sa",
+  "sharded_variant_calling.mother_fastq": "/opt/workshop/data/trio/fastq/mother.fq",
+  "sharded_variant_calling.scatter_count": 4
+}

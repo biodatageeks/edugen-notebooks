@@ -1,0 +1,20 @@
+{
+  "alignment_pipeline.ref_fasta": "/opt/workshop/data/trio/ref/ref.fasta",
+  "alignment_pipeline.ref_dict": "/opt/workshop/data/trio/ref/ref.dict",
+  "alignment_pipeline.ref_fasta_fai": "/opt/workshop/data/trio/ref/ref.fasta.fai",
+  "alignment_pipeline.ref_fasta_amb": "/opt/workshop/data/trio/ref/ref.fasta.amb",
+  "alignment_pipeline.ref_fasta_ann": "/opt/workshop/data/trio/ref/ref.fasta.ann",
+  "alignment_pipeline.ref_fasta_bwt": "/opt/workshop/data/trio/ref/ref.fasta.bwt",
+  "alignment_pipeline.ref_fasta_pac": "/opt/workshop/data/trio/ref/ref.fasta.pac",
+  "alignment_pipeline.ref_fasta_sa": "/opt/workshop/data/trio/ref/ref.fasta.sa",
+  "alignment_pipeline.fastq_files": [
+    "/opt/workshop/data/trio/fastq/mother.fq",
+    "/opt/workshop/data/trio/fastq/father.fq",
+    "/opt/workshop/data/trio/fastq/son.fq"
+  ],
+  "alignment_pipeline.sample_names": [
+    "mother",
+    "father",
+    "son"
+  ]
+}
