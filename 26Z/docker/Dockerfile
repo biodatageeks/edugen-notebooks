@@ -39,6 +39,7 @@ RUN curl -fsSL -o /usr/share/keyrings/cloud.google.asc https://packages.cloud.go
     rm -rf /var/lib/apt/lists/* /usr/lib/google-cloud-sdk/.install/.backup
 ENV CLOUDSDK_AUTH_DISABLE_CREDENTIALS=true \
     CLOUDSDK_CORE_DISABLE_USAGE_REPORTING=true \
+    CLOUDSDK_CORE_DISABLE_FILE_LOGGING=true \
     CLOUDSDK_COMPONENT_MANAGER_DISABLE_UPDATE_CHECK=true
 
 # Wątek "process reaper" JVM ma bardzo mały stos; przy zwiększonej rezerwie TLS (GLIBC_TUNABLES wyżej)
@@ -92,10 +93,11 @@ RUN chmod +x /usr/local/bin/workshop-sync /usr/local/bin/workshop-check && \
       bwa 2>&1 | grep Version; samtools --version | head -1; bcftools --version | head -1; \
       bedtools --version; /opt/gatk/gatk --version 2>/dev/null | head -1; fastqc --version; \
       multiqc --version; gcloud version 2>/dev/null | head -1; echo "cromwell ${CROMWELL_VERSION}"; \
-      su ${NB_USER} -c "/opt/conda/bin/pip freeze"; } > /opt/workshop/VERSIONS.txt 2>&1
+      su ${NB_USER} -c "/opt/conda/bin/pip freeze"; } > /opt/workshop/VERSIONS.txt 2>&1 && \
+    rm -rf /home/${NB_USER}/.config/gcloud
 USER ${NB_UID}
 
 EXPOSE 8888 4040
 WORKDIR /home/${NB_USER}/work
 CMD ["start-notebook.py", "--IdentityProvider.token=", "--ServerApp.root_dir=/home/jovyan/work", \
-     "--ServerApp.default_url=/lab/tree/edugen-notebooks/26Z"]
+     "--LabApp.default_url=/lab/tree/edugen-notebooks/26Z"]

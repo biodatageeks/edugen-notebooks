@@ -4,17 +4,22 @@ Warsztaty: **niedziela, 25 października 2026, 8 godzin z przerwami**. Prowadzą
 
 | Część | Notatnik | Temat |
 |---|---|---|
-| 1 | `01_spark_fastq.ipynb` | Apache Spark: przetwarzanie rozproszone na przykładzie plików FASTQ, kubełki |
+| 1 | `01_spark_fastq.ipynb` | Apache Spark: przetwarzanie rozproszone na przykładzie plików FASTQ, kubełki (gcloud) |
 | 2 | `02_pipelines_wdl.ipynb` | Potoki przetwarzania: WDL i Cromwell, scatter-gather, sharding |
 | 3 | `03_polars_bio_vepyr.ipynb` | polars-bio i vepyr: leniwe zapytania, równoległość, streaming, adnotacja wariantów |
 
-Pracujemy na własnych laptopach. Wszystkie programy (m.in. Spark, Cromwell, GATK, gcloud), biblioteki i dane są w jednym obrazie Dockera, który działa na macOS (Apple Silicon M1–M4 i Intel), Windows i Linuksie.
+Pracujemy na własnych laptopach, w kontenerze Dockera, który działa na macOS (Apple Silicon M1–M4 i Intel), Windows i Linuksie:
+* **obraz Dockera** zawiera narzędzia: Spark, Cromwell, GATK, bwa, samtools, gcloud, polars-bio, vepyr, JupyterLab;
+* **notatniki** kontener pobiera z tego repozytorium przy pierwszym uruchomieniu i aktualizuje przy każdym kolejnym;
+* **dane** (około 1,2 GB) kontener pobiera z publicznych źródeł przy pierwszym uruchomieniu.
+
+Wszystko trafia do folderu **`omics-2026`** w Twoim katalogu domowym.
 
 ---
 
-## Przed zajęciami – zrób to dziś (około 30 minut)
+## Przed zajęciami – zrób to dziś (około 30–45 minut)
 
-Obraz ma około 3,4 GB. Pobranie go na sali, przez 20 osób jednocześnie, nie zadziała – **pobierz go wcześniej**.
+Obraz (około 3,5 GB) i dane (około 1,2 GB) **pobierz wcześniej** – pobieranie przez 20 osób jednocześnie na sali nie zadziała.
 
 ### 1. Zainstaluj Dockera
 
@@ -39,33 +44,28 @@ W terminalu (macOS/Linux) lub w PowerShellu (Windows):
 docker pull tgambin65716/omics-bigdata:2026.10
 ```
 
-### 4. Sprawdź środowisko
+### 4. Sprawdź narzędzia
 
 ```
 docker run --rm tgambin65716/omics-bigdata:2026.10 workshop-check
 ```
 
-Test trwa około minuty. Każda linia powinna zaczynać się od `[OK]`, a na końcu powinien pojawić się napis **`Środowisko gotowe.`** Linie `Picked up JAVA_TOOL_OPTIONS` są normalne. Przykładowy wynik:
+Test trwa około minuty. Każda linia powinna zaczynać się od `[OK]`, a na końcu powinien pojawić się napis **`Środowisko gotowe.`** Jeśli pojawi się `[BŁĄD]`, prześlij prowadzącym cały wynik tego polecenia jeszcze przed zajęciami.
 
-```
-Architektura: aarch64 | CPU: 8 | RAM: 7 GiB
-  [OK]   Java                         openjdk version "17.0.20.1" 2026-08-18
-  ...
-  [OK]   Cromwell                     workflow Succeeded
-Środowisko gotowe.
-```
+### 5. Pierwsze uruchomienie: notatniki i dane
 
-Jeśli pojawi się `[BŁĄD]`, prześlij prowadzącym cały wynik tego polecenia jeszcze przed zajęciami.
-
-### 5. Utwórz folder na pliki i otwórz JupyterLab
-
-Notatniki i wyniki będą w folderze `omics-2026` w Twoim katalogu domowym. Utwórz go (to samo polecenie w terminalu i w PowerShellu):
+Utwórz folder na pliki warsztatu (to samo polecenie w terminalu i w PowerShellu):
 
 ```
 mkdir "$HOME/omics-2026"
 ```
 
-Następnie uruchom kontener (polecenie w sekcji *Uruchomienie* niżej) i sprawdź, że w przeglądarce widzisz trzy notatniki, a w folderze `omics-2026` na dysku pojawiły się te same pliki. Potem zamknij kontener (`Ctrl+C` w terminalu).
+Następnie uruchom kontener poleceniem z sekcji [Uruchomienie](#uruchomienie). Za pierwszym razem kontener:
+1. pobiera notatniki z repozytorium,
+2. pobiera i przygotowuje dane (około 1,2 GB) – w terminalu widać kolejne etapy `[dane] ...: OK`; zwykle trwa to **5–15 minut**,
+3. uruchamia JupyterLab.
+
+Gdy w terminalu pojawi się `[dane] Wszystkie dane gotowe` i adres `http://127.0.0.1:8888/lab`, otwórz go w przeglądarce. Powinny być widoczne trzy notatniki. Zamknij kontener (`Ctrl+C`) – gotowe.
 
 ---
 
@@ -83,14 +83,14 @@ docker run --rm -it --name omics -p 127.0.0.1:8888:8888 -p 127.0.0.1:4040:4040 -
 docker run --rm -it --name omics -p 127.0.0.1:8888:8888 -p 127.0.0.1:4040:4040 -v "${HOME}\omics-2026:/home/jovyan/work" tgambin65716/omics-bigdata:2026.10
 ```
 
-Następnie otwórz w przeglądarce **http://127.0.0.1:8888/lab**. Notatniki uruchamiamy kernelem **Python 3 (ipykernel)** – jest jedynym kernelem w obrazie i wybiera się sam.
+Następnie otwórz w przeglądarce **http://127.0.0.1:8888** – JupyterLab otworzy się w katalogu z notatnikami (`edugen-notebooks/26Z`). Notatniki uruchamiamy kernelem **Python 3 (ipykernel)** – jest jedynym kernelem w obrazie i wybiera się sam.
 
 | Opcja | Znaczenie |
 |---|---|
 | `--name omics` | nazwa kontenera |
 | `-p 127.0.0.1:8888:8888` | JupyterLab |
 | `-p 127.0.0.1:4040:4040` | Spark UI (część 1): http://127.0.0.1:4040, gdy działa sesja Sparka |
-| `-v "$HOME/omics-2026:/home/jovyan/work"` | folder `omics-2026` z Twojego dysku widoczny w kontenerze jako `~/work` (katalog główny JupyterLaba) |
+| `-v "$HOME/omics-2026:/home/jovyan/work"` | folder `omics-2026` z Twojego dysku widoczny w kontenerze jako `~/work` |
 | `--rm` | po zamknięciu usuwa kontener – **Twoje pliki zostają w folderze `omics-2026`** |
 
 `127.0.0.1` sprawia, że JupyterLab jest dostępny tylko z Twojego komputera, a nie z sieci na sali. Zakończenie pracy: `Ctrl+C` w terminalu, w którym działa kontener.
@@ -99,19 +99,27 @@ Następnie otwórz w przeglądarce **http://127.0.0.1:8888/lab**. Notatniki uruc
 
 ## Twoje pliki: folder `omics-2026`
 
-Notatniki, wyniki obliczeń (`wyniki/`, `cromwell-executions/` z części 2) i Twoje własne pliki są w zwykłym folderze `omics-2026` w katalogu domowym – możesz je otwierać, kopiować i archiwizować jak każde inne pliki (Finder, Eksplorator plików). Wszystko, co zapiszesz w JupyterLabie, od razu jest na Twoim dysku, a pliki skopiowane do folderu od razu widać w JupyterLabie.
+```
+omics-2026/
+├── edugen-notebooks/26Z/      notatniki, potoki WDL (dags/), skrypty – kopia tego repozytorium
+│   ├── wyniki/                Twoje wyniki z części 1 i 3
+│   └── cromwell-executions/   wyniki potoków z części 2
+└── data/                      dane warsztatu (pobrane przy pierwszym uruchomieniu)
+```
 
-**Czy restart kontenera nadpisze moje notatniki?** Nie.
+To zwykły folder na Twoim dysku – możesz go otwierać, kopiować i archiwizować jak każde inne pliki (Finder, Eksplorator plików). Wszystko, co zapiszesz w JupyterLabie, od razu jest na dysku.
 
-| Sytuacja przy starcie kontenera | Co się dzieje |
+**Aktualizacje notatników.** Przy każdym uruchomieniu kontener sprawdza, czy prowadzący nie poprawili materiałów (wymaga internetu; bez sieci pracujesz na dotychczasowej wersji). Twoja praca nie jest nadpisywana:
+
+| Sytuacja | Co się dzieje |
 |---|---|
-| ten sam obraz | nic się nie zmienia |
-| nowa wersja obrazu (po `docker pull`), plik przez Ciebie niezmieniony | plik zostaje zaktualizowany do nowej wersji |
-| nowa wersja obrazu, plik przez Ciebie zmieniony (także przez uruchomienie komórek) | Twój plik zostaje bez zmian, nowa wersja pojawia się obok jako `*.nowa.ipynb` |
-| Twoje własne pliki i wyniki | nigdy nie są zmieniane |
-| brakujący plik (np. usunięty przez Ciebie) | zostaje skopiowany ponownie |
+| plik przez Ciebie niezmieniony, nowa wersja w repozytorium | plik zostaje zaktualizowany |
+| plik przez Ciebie zmieniony (także przez uruchomienie komórek), nowa wersja w repozytorium | Twój plik zostaje bez zmian, nowa wersja pojawia się obok jako `*.nowa.ipynb` |
+| Twoje własne pliki i wyniki (`wyniki/`, `cromwell-executions/`, ...) | nigdy nie są zmieniane |
 
-Ukryty plik `.materials.sha256` w folderze służy do tego porównania – nie usuwaj go. Żeby zacząć od zera, zamknij kontener i usuń (albo przenieś) zawartość folderu `omics-2026`; przy następnym uruchomieniu notatniki zostaną skopiowane od nowa.
+Komunikaty o aktualizacji widać w terminalu na początku (linie `[warsztaty] ...`).
+
+**Jak zacząć od zera?** Zamknij kontener i usuń folder `omics-2026/edugen-notebooks` (dane w `omics-2026/data` mogą zostać – nie będą pobierane ponownie). Przy następnym uruchomieniu notatniki zostaną pobrane od nowa.
 
 ---
 
@@ -121,11 +129,12 @@ Ukryty plik `.materials.sha256` w folderze służy do tego porównania – nie u
 |---|---|
 | `Cannot connect to the Docker daemon` | uruchom Docker Desktop (Linux: `sudo systemctl start docker`) |
 | `permission denied ... docker.sock` (Linux) | `sudo usermod -aG docker $USER`, wyloguj się i zaloguj; albo dodaj `sudo` przed `docker` |
-| `port is already allocated` | port jest zajęty – zmień port na komputerze, np. `-p 127.0.0.1:8890:8888`, i otwórz http://127.0.0.1:8890/lab |
+| `Nie udało się pobrać repozytorium` albo `[dane] ...: BŁĄD` | brak internetu lub przerwane pobieranie – uruchom kontener ponownie; gotowe etapy nie są powtarzane |
+| `port is already allocated` | port jest zajęty – zmień port na komputerze, np. `-p 127.0.0.1:8890:8888`, i otwórz http://127.0.0.1:8890 |
 | `The container name "/omics" is already in use` | poprzedni kontener nadal działa lub nie został usunięty: `docker rm -f omics` |
-| Windows: błąd WSL 2 lub wirtualizacji | w PowerShellu jako administrator: `wsl --install`; włącz wirtualizację (Intel VT-x / AMD-V) w BIOS/UEFI |
 | Linux: `Permission denied` przy zapisie w `omics-2026` | Twój identyfikator użytkownika (`id -u`) jest inny niż 1000 – dodaj do `docker run`: `--user root -e NB_UID=$(id -u) -e NB_GID=100` |
-| Windows: wolne działanie części 2 (Cromwell) | pliki z dysku Windows są udostępniane kontenerowi wolniej – to normalne; potok i tak się wykona |
+| Windows: błąd WSL 2 lub wirtualizacji | w PowerShellu jako administrator: `wsl --install`; włącz wirtualizację (Intel VT-x / AMD-V) w BIOS/UEFI |
+| Windows: wolne działanie | pliki z dysku Windows są udostępniane kontenerowi wolniej – to normalne |
 | kernel notatnika się restartuje, „Kernel died” | za mało pamięci – zwiększ *Memory* w Docker Desktop (Settings → Resources) |
 | `Illegal instruction` w części 3 | bardzo stary procesor x86 bez instrukcji AVX2 (sprzed około 2013 r.) – pracuj w parze |
 
@@ -133,14 +142,19 @@ Ukryty plik `.materials.sha256` w folderze służy do tego porównania – nie u
 
 ## Dla prowadzących
 
-### Dane w obrazie
+### Jak to działa
 
-| Katalog | Zawartość | Źródło |
+* `docker/Dockerfile` – obraz z samymi narzędziami (bez notatników i danych); zmieniamy go rzadko.
+* `docker/workshop-sync` – uruchamiany przy każdym starcie kontenera (przed JupyterLabem): klonuje to repozytorium (branch `feat/sharding-wdl`, tylko katalog `26Z`, sparse checkout) do `~/work/edugen-notebooks` albo je aktualizuje (pliki zmienione przez uczestnika zostają, nowa wersja trafia obok jako `*.nowa.*`), a potem uruchamia **`26Z/setup/on_start.sh` z repozytorium**. Zmienne `WORKSHOP_REPO`, `WORKSHOP_BRANCH`, `WORKSHOP_DIR` pozwalają wskazać inne repozytorium, branch lub katalog.
+* `setup/on_start.sh` – przygotowuje dane (`setup/prepare_data.sh` → `~/work/data`), jeśli ich brak albo zmieniła się `DATA_VERSION`. Zmiany w notatnikach, skryptach i danych **wystarczy wypchnąć do repozytorium** – uczestnicy dostaną je przy następnym uruchomieniu kontenera, bez pobierania nowego obrazu.
+
+### Dane
+
+| Katalog (w kontenerze) | Zawartość | Źródło |
 |---|---|---|
-| `/opt/workshop/data/trio` | trio matka–ojciec–syn: referencja b37 (fragment chr20) z indeksem BWA, BAM, FASTQ, FASTQ jako Parquet | publiczny kubełek `gs://gatk-tutorials/workshop_1906/2-germline` |
-| `/opt/workshop/part3` | GIAB HG002 v4.2.1 (GRCh38), GENCODE 47, cache Ensembl 116 (chr22), FASTA chr22 | `part3/data/real_sources.json` (adresy i sumy SHA-256) |
-| `/opt/workshop/part3/ailist` | zbiory AIList ex-rna (~10 mln mapowań direct RNA) i ex-anno (~1,2 mln elementów GENCODE) – benchmark równoległości | archiwum `databio.zip` z [dokumentacji polars-bio](https://biodatageeks.org/polars-bio/supplement/), suma SHA-256 w `docker/prepare_ailist.sh` |
-| `/opt/workshop/materials` | notatniki, `dags/`, `img/`, ten plik – kopiowane przy starcie do `~/work`, czyli podmontowanego folderu `omics-2026` (`docker/hooks/50-copy-materials.sh`) | katalog `26Z/` tego repozytorium |
+| `~/work/data/trio` | trio matka–ojciec–syn: referencja b37 (fragment chr20) z indeksem BWA, BAM, FASTQ, FASTQ jako Parquet | publiczny kubełek `gs://gatk-tutorials/workshop_1906/2-germline` (`setup/prepare_trio.sh`) |
+| `~/work/data/part3` | GIAB HG002 v4.2.1 (GRCh38), GENCODE 47, cache Ensembl 116 (chr22), FASTA chr22 | `part3/data/real_sources.json` (adresy i sumy SHA-256) |
+| `~/work/data/part3/ailist` | zbiory AIList ex-rna (~10 mln mapowań direct RNA) i ex-anno (~1,2 mln elementów GENCODE) – benchmark równoległości | archiwum `databio.zip` z [dokumentacji polars-bio](https://biodatageeks.org/polars-bio/supplement/), suma SHA-256 w `setup/prepare_ailist.sh` |
 
 Wersje narzędzi i bibliotek: `/opt/workshop/VERSIONS.txt` w kontenerze.
 
@@ -151,7 +165,7 @@ Wersje narzędzi i bibliotek: `/opt/workshop/VERSIONS.txt` w kontenerze.
 | `tgambin65716/omics-bigdata:2026.10`, `:latest` | `linux/amd64` + `linux/arm64`; `docker pull` wybiera architekturę |
 | `tgambin65716/omics-bigdata:2026.10-amd64`, `:2026.10-arm64` | jedna architektura (diagnostyka) |
 
-### Budowanie i publikacja
+### Budowanie i publikacja obrazu
 
 ```
 cd 26Z
@@ -159,7 +173,7 @@ docker buildx build --platform linux/amd64,linux/arm64 -f docker/Dockerfile \
   -t tgambin65716/omics-bigdata:2026.10 -t tgambin65716/omics-bigdata:latest --push .
 ```
 
-Etap `data` (pobieranie i przygotowanie danych) wykonuje się raz, natywnie na maszynie budującej. Przy budowaniu `linux/amd64` w emulacji na Apple Silicon kontrola importu polars-bio/vepyr jest pomijana (emulacja nie ma AVX2).
+Przy budowaniu `linux/amd64` w emulacji na Apple Silicon kontrola importu polars-bio/vepyr jest pomijana (emulacja nie ma AVX2).
 
 Dwie zmienne środowiskowe obrazu są konieczne na arm64 (Apple Silicon):
 * `GLIBC_TUNABLES=glibc.rtld.optional_static_tls=65536` – bez tego polars-bio i vepyr nie dają się zaimportować w jednym procesie (`cannot allocate memory in static TLS block`);
