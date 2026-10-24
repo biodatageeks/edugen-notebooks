@@ -111,12 +111,16 @@
     "coordinates": "0-based half-open; GTF start minus one, end unchanged; SNV [POS-1, POS)"
   },
   "reference_fasta": {
-    "url": "https://hgdownload.soe.ucsc.edu/goldenPath/hg38/chromosomes/chr22.fa.gz",
+    "url": "https://hgdownload.gi.ucsc.edu/goldenPath/hg38/chromosomes/chr22.fa.gz",
     "sha256": "05f9d97d6fbfd08a44ca45b50837ca2ae9c471f35ba79dffec04d2cb5eaaf695",
     "size": 12255678,
     "fasta_sha256": "ce3ee1ca39356238f7aee438a40a88b4f1b9d80b316b263e16fb12402212d10f",
     "assembly": "GRCh38",
     "contig": "chr22",
-    "length": 50818468
+    "length": 50818468,
+    "mirrors": [
+      "https://hgdownload2.soe.ucsc.edu/goldenPath/hg38/chromosomes/chr22.fa.gz",
+      "https://hgdownload.soe.ucsc.edu/goldenPath/hg38/chromosomes/chr22.fa.gz"
+    ]
   }
 }

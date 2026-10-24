@@ -6,19 +6,45 @@ import gzip,hashlib,json,urllib.request,shutil
 def sha256(path):
  with open(path,'rb') as f: return hashlib.file_digest(f,'sha256').hexdigest()
 
-def download(url,path,expected):
+def _fetch(url,partial,label,slow_after=20,min_rate=200_000):
+ """Pobiera url do pliku; co ~5 s wypisuje postęp. Gdy po slow_after s średnia prędkość < min_rate B/s, przerywa (TimeoutError)."""
+ import time
+ start=last=time.monotonic(); done=0
+ with urllib.request.urlopen(url,timeout=60) as r,partial.open('wb') as w:
+  total=int(r.headers.get('Content-Length') or 0)
+  while chunk:=r.read(1<<20):
+   w.write(chunk); done+=len(chunk); now=time.monotonic()
+   if now-last>=5:
+    last=now; rate=done/(now-start)
+    print(f'  {label}: {done/1e6:.0f}/{total/1e6:.0f} MB, {rate/1e6:.1f} MB/s',flush=True)
+    if now-start>slow_after and rate<min_rate: raise TimeoutError(f'zbyt wolne pobieranie ({rate/1e3:.0f} kB/s)')
+
+def download(url,path,expected,mirrors=()):
+ """Pobiera plik i sprawdza SHA-256; przy błędzie lub bardzo wolnym serwerze próbuje kolejnych luster."""
  path=Path(path); path.parent.mkdir(parents=True,exist_ok=True)
  if path.exists() and sha256(path)==expected: return path
  partial=path.with_name(path.name+'.part')
- with urllib.request.urlopen(url,timeout=120) as r,partial.open('wb') as w: shutil.copyfileobj(r,w)
- if sha256(partial)!=expected: raise RuntimeError(f'Niezgodna suma kontrolna: {path.name}')
- partial.replace(path)
- return path
+ urls=[url,*mirrors]
+ for i,u in enumerate(urls):
+  last=i==len(urls)-1
+  try:
+   _fetch(u,partial,path.name,slow_after=10**9 if last else 20)
+  except Exception as e:
+   if last: raise
+   print(f'  {path.name}: {e} – próbuję innego serwera',flush=True); continue
+  if sha256(partial)==expected: partial.replace(path); return path
+  if last: raise RuntimeError(f'Niezgodna suma kontrolna: {path.name}')
+  print(f'  {path.name}: niezgodna suma kontrolna – próbuję innego serwera',flush=True)
 
 def prepare_fasta(folder,source):
  import pysam
  folder=Path(folder)
- compressed=download(source['url'],folder/'GRCh38_chr22.fa.gz',source['sha256'])
+ folder.mkdir(parents=True,exist_ok=True)
+ compressed=folder/'GRCh38_chr22.fa.gz'
+ bundled=Path(__file__).resolve().parents[1]/'data'/'GRCh38_chr22.fa.gz'  # kopia w repozytorium (12 MB)
+ if not (compressed.exists() and sha256(compressed)==source['sha256']) and bundled.exists() and sha256(bundled)==source['sha256']:
+  shutil.copy(bundled,compressed)
+ compressed=download(source['url'],compressed,source['sha256'],source.get('mirrors',()))
  fasta=folder/'GRCh38_chr22.fa'
  if not fasta.exists() or sha256(fasta)!=source['fasta_sha256']:
   partial=fasta.with_name(fasta.name+'.part')
